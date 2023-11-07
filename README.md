@@ -1,2 +1,2 @@
-# LibrarySystemdotcpp
-Library system using two databases , sql and mongodb (sql for school project and monogdb for general purpose)
+# BankManagementSystemdotcpp
+Bank management system using C++ (school project for final boards)
