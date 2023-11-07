@@ -1,25 +1,29 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include<cmath>
 #include<ctime>
 using namespace std;
 
 string name , prof, email, isEmploy, pin , nowCreate;
-int age, ph_no;
-float balance = 100, dep_money, with_money;
-
+int age, ph_no, fake_ph;
+float balance = 100;
+float number_of_digits;
 
 class Bank{
 
     private:
     string u_name ;
     string choice;
+    float dep_money, with_money;
+
     void deleteUserByName(const string& x);
     void findUserDetailsByName(const string& x);
     void deposit();
     void balance();
     void withdraw();
     void close_acc();
+    void appendBalanceForUser(const string& x, const float& y);
     void sleep(float seconds){
         clock_t startClock = clock();
         float secondsAhead = seconds * CLOCKS_PER_SEC;
@@ -57,15 +61,18 @@ class Bank{
                 continue;
             }
             else if(choice == "2"){
+                balance();
                 deposit();
                 continue;
             }
             else if(choice == "3"){
+                balance();
                 withdraw();
                 continue;
             }
             else if(choice == "4"){
                 balance();
+                cout<< "Your current balance: Rs.\e[1m" << ::balance << "\e[0m" << endl;
                 continue;
             }
             else if(choice == "5"){
@@ -148,30 +155,61 @@ void Bank::deleteUserByName(const string& username) {
 void Bank::deposit(){
     cout<<"Enter the amount to be deposited: ";
     cin>>dep_money;
-
+    appendBalanceForUser(u_name , dep_money);
     ::balance += dep_money;
     
     cout<<"Money deposited: Rs.\e[1m"<<dep_money<<"\e[0m"<<endl;
-    cout<<"Current Balance: Rs.\e[1m"<<::balance<<"\e[0m"<<endl;
+    
 }
 
 void Bank::withdraw(){
     cout<<"Enter the amount to be withdrawn: ";
     cin>>with_money;
+
+    
+
     if(::balance >= with_money){
         ::balance -= with_money;
+        appendBalanceForUser(u_name , -with_money);
+        cout<<"Money withdrawn: Rs.\e[1m"<<with_money<<"\e[0m"<<endl;
+       
     }
     else{
         cout<<"Insufficient Money"<<endl;
     }
-    cout<<"Money withdrawn: Rs.\e[1m"<<with_money<<"\e[0m"<<endl;
-    cout<<"Current Balance: Rs.\e[1m"<<::balance<<"\e[0m"<<endl;
+    
     
 }
 
-void Bank::balance(){
-    cout<<"Your current balance: Rs.\e[1m"<<::balance<<"\e[0m"<<endl;
+
+
+void Bank::balance() {
+    ifstream userFile("user_details.txt");
+    if (userFile.is_open()) {
+        string storedName, storedPassword, storedEmail, storedProf;
+        int storedPhoneNo, storedAge;
+        float storedMoney;
+        bool found = false;
+
+        while (userFile >> storedName >> storedPassword >> storedPhoneNo >> storedAge >> storedEmail >> storedProf >> storedMoney) {
+            if (u_name == storedName) {
+                found = true;
+                ::balance = storedMoney; 
+                
+                break;
+            }
+        }
+
+        userFile.close();
+
+        if (!found) {
+            cout << "User with name " << u_name << " not found." << endl;
+        }
+    } else {
+        cout << "Error: Could not open the file for reading." << endl;
+    }
 }
+
 
 
 void Bank::close_acc(){
@@ -219,6 +257,41 @@ void Bank::findUserDetailsByName(const string& name) {
 }
 
 
+void Bank::appendBalanceForUser(const string& name, const float& addedBalance) {
+        ifstream inputFile("user_details.txt");
+        ofstream tempFile("temp_file.txt");
+        if (inputFile.is_open() && tempFile.is_open()) {
+            string storedName, storedPassword, storedEmail, storedProf;
+            int storedPhoneNo, storedAge;
+            float storedMoney;
+            bool found = false;
+
+            while (inputFile >> storedName >> storedPassword >> storedPhoneNo >> storedAge >> storedEmail >> storedProf >> storedMoney) {
+                if (name == storedName) {
+                    found = true;
+                    storedMoney += addedBalance;
+                    tempFile << storedName << ' ' << storedPassword << ' ' << storedPhoneNo << ' ' << storedAge << ' ' << storedEmail << ' ' << storedProf << ' ' << storedMoney << endl;
+                } else {
+                    tempFile << storedName << ' ' << storedPassword << ' ' << storedPhoneNo << ' ' << storedAge << ' ' << storedEmail << ' ' << storedProf << ' ' << storedMoney << endl;
+                }
+            }
+
+            inputFile.close();
+            tempFile.close();
+
+            if (found) {
+                remove("user_details.txt");
+                rename("temp_file.txt", "user_details.txt");
+                
+            } else {
+                remove("temp_file.txt");
+                cout << "User " << name << " not found." << endl;
+            }
+        } else {
+            cout << "Error: Could not open the file for reading or writing." << endl;
+        }
+}
+
 
 
 void saveUserDetails(const string& fname, const string& fpassword,int phonenumber , int fage, const string& femail , string work ,float money) {
@@ -253,40 +326,7 @@ string isUserRegistered(const string& name, const string& password) {
 }
 
 
-// void appendBalanceForUser(const string& apdname, const int& apdpin) {
-//     ifstream inputFile("user_details.txt");
-//     ofstream tempFile("temp_file.txt");
-//     if (inputFile.is_open() && tempFile.is_open()) {
-//         string storedName, storedEmail, storedProf, storedPassword;
-//         int storedPhoneNo, storedAge;
-//         float storedMoney;
-        
-//         bool found = false;
 
-//         while (inputFile >> storedName >> storedPassword >> storedPhoneNo >> storedAge >> storedEmail >> storedProf >> storedMoney) {
-//             if (apdname == storedName && apdpin = storedPassword) {
-//                 found = true;
-//                 tempFile << storedName << storedPassword << storedPhoneNo << storedAge << storedEmail << storedProf << storedMoney << ' ' << apdBalance << endl;
-//             } else {
-//                 tempFile << storedName << storedPassword << storedPhoneNo << storedAge << storedEmail << storedProf << storedMoney  << endl;
-//             }
-//         }
-
-//         inputFile.close();
-//         tempFile.close();
-
-//         if (found) {
-//             remove("user_details.txt");
-//             rename("temp_file.txt", "user_details.txt");
-//             cout << "balance appended for user: " << name << endl;
-//         } else {
-//             remove("temp_file.txt");
-//             cout << "User with name " << name << " not found." << endl;
-//         }
-//     } else {
-//         cout << "Error: Could not open the file for reading or writing." << endl;
-//     }
-// }
 
 void sleep(float seconds){
     clock_t startClock = clock();
@@ -337,11 +377,30 @@ int main(){
                 cout<<"\e[1m>\e[0m Enter your age: ";
                 cin>>age;
                 sleep(0.5);
-                cout<<"\e[1m>\e[0m Enter your phone number: ";
-                cin>>ph_no;
+
+                while(true){
+                    cout<<"\e[1m>\e[0m Enter your phone number: ";
+                    cin>>fake_ph;
+                    number_of_digits = ceil(log10(fake_ph));
+
+                    if(number_of_digits == 10){
+                        ph_no = fake_ph;
+                        break;
+                    }
+                    else{
+                        cout<<"\033[31mInvalid phone number !\033[0m"<<endl;
+                        cout<<"Try again !"<<endl;
+                        continue;
+                    }
+                }
+                
                 sleep(0.5);
-                cout<<"\e[1m>\e[0m Enter your email address: ";
-                cin>>email;
+
+                cout << "\e[1m>\e[0m Enter your email address: ";
+                
+                getline(cin, email);
+
+
                 sleep(0.5);
                 cout<<"\e[1m>\e[0m Are you employed ?(Y/N): ";
                 
