@@ -6,7 +6,7 @@
 using namespace std;
 
 string name , prof, email, isEmploy, pin , nowCreate;
-int age, ph_no, fake_ph;
+int age, ph_no;
 float balance = 100;
 float number_of_digits;
 
@@ -53,7 +53,7 @@ class Bank{
             cout<<"5. \033[35mClose Account\033[0m"<<endl;
             cout<<"6. \033[35mExit\033[0m"<<endl<<endl;
 
-            cout<<"\e[1m>\e[0m Enter choice: ";
+            cout<<"> Enter choice: ";
             cin>>choice;
             cout<<endl;
             if(choice == "1"){
@@ -153,7 +153,7 @@ void Bank::deleteUserByName(const string& username) {
 
 
 void Bank::deposit(){
-    cout<<"Enter the amount to be deposited: ";
+    cout<<"> Enter the amount to be deposited: ";
     cin>>dep_money;
     appendBalanceForUser(u_name , dep_money);
     ::balance += dep_money;
@@ -163,7 +163,7 @@ void Bank::deposit(){
 }
 
 void Bank::withdraw(){
-    cout<<"Enter the amount to be withdrawn: ";
+    cout<<"> Enter the amount to be withdrawn: ";
     cin>>with_money;
 
     
@@ -345,10 +345,10 @@ int main(){
     cout<<"\e[1mLogin\e[0m"<<endl;
     cout<<"\e[1m~~~~~\e[0m"<<endl;
     sleep(0.7);
-    cout<<"\e[1m>\e[0m Enter your name: ";
+    cout<<"> Enter your name: ";
     cin>>name;
     sleep(0.5);
-    cout<<"\e[1m>\e[0m Enter your pin: ";
+    cout<<"> Enter your pin: ";
     cin>>pin;
     sleep(0.5);
     cout<<endl;
@@ -371,44 +371,30 @@ int main(){
             cout<<"Do you want to create a new account?(Y/N) ";
             cin>>nowCreate;
             if(nowCreate == "Y" || nowCreate == "y"){
-                cout<<"\n\e[1m>\e[0m Enter your name: ";
+                cout<<"\n> Enter your name: ";
                 cin>>name;
                 sleep(0.5);
-                cout<<"\e[1m>\e[0m Enter your age: ";
+                cout<<"> Enter your age: ";
                 cin>>age;
                 sleep(0.5);
 
-                while(true){
-                    cout<<"\e[1m>\e[0m Enter your phone number: ";
-                    cin>>fake_ph;
-                    number_of_digits = ceil(log10(fake_ph));
-
-                    if(number_of_digits == 10){
-                        ph_no = fake_ph;
-                        break;
-                    }
-                    else{
-                        cout<<"\033[31mInvalid phone number !\033[0m"<<endl;
-                        cout<<"Try again !"<<endl;
-                        continue;
-                    }
-                }
+                cout<<"> Enter your phone number: ";
+                cin>>ph_no;
                 
                 sleep(0.5);
 
-                cout << "\e[1m>\e[0m Enter your email address: ";
-                
-                getline(cin, email);
+                cout << "> Enter your email address: ";
+                cin>>email;
 
 
                 sleep(0.5);
-                cout<<"\e[1m>\e[0m Are you employed ?(Y/N): ";
+                cout<<"> Are you employed ?(Y/N): ";
                 
                 cin>>isEmploy;
                 if(isEmploy == "y" || isEmploy == "Y"){
                     
                     sleep(0.5);
-                    cout<<"\e[1m>\e[0m Enter you profession: ";
+                    cout<<"> Enter you profession: ";
                     cin>>prof;
 
                 }
@@ -417,7 +403,7 @@ int main(){
                     prof = "Unemployed";
 
                 }
-                cout<<"\e[1m>\e[0m Enter a pin for your account (0-9): ";
+                cout<<"> Enter a pin for your account (0-9): ";
                 cin>>pin;
                 cout<<endl;
                 cout<<"\033[0;33mProcessing.....\033[0m"<<endl;  //Yellow color used
