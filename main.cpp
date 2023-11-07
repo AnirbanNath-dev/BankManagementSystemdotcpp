@@ -6,15 +6,15 @@ using namespace std;
 
 string name , prof, email, isEmploy, pin , nowCreate;
 int age, ph_no;
-float balance = 0, dep_money, with_money;
+float balance = 100, dep_money, with_money;
 
 
 class Bank{
 
     private:
-    string u_name , closeAccName , closeAccPin;
-    int choice;
-    void deleteUserByName(const string& x , string y);
+    string u_name ;
+    string choice;
+    void deleteUserByName(const string& x);
     void findUserDetailsByName(const string& x);
     void deposit();
     void balance();
@@ -52,33 +52,52 @@ class Bank{
             cout<<"\e[1m>\e[0m Enter choice: ";
             cin>>choice;
             cout<<endl;
-            if(choice == 1){
+            if(choice == "1"){
                 findUserDetailsByName(u_name);
                 continue;
             }
-            else if(choice == 2){
+            else if(choice == "2"){
                 deposit();
                 continue;
             }
-            else if(choice == 3){
+            else if(choice == "3"){
                 withdraw();
                 continue;
             }
-            else if(choice == 4){
+            else if(choice == "4"){
                 balance();
                 continue;
             }
-            else if(choice == 5){
-                close_acc();
+            else if(choice == "5"){
+                string opinion;
+                while(true){
+                    cout<<"\e[1m>\e[0m Are you sure you want to close account ?(Y/N) ";
+                    cin>>opinion;
+                    cout<<endl;
+                    if(opinion == "Y" || opinion == "y"){
+                        close_acc();
+                        break;
+                    }
+                    else if(opinion == "N" || opinion == "n"){
+                        cout<<"\033[32mDeletion is terminated \033[0m!";
+                        break;
+                    }
+                    else{
+                        cout<<"\033[31Request declined !\033[0m";
+                        continue;
+                    }
+                }
+                
                 cout<<"\n\033[32mThanks for choosing our services\033[0m \e[1m!\e[0m"<<endl<<endl;
                 break;
             }
-            else if(choice == 6){
+            else if(choice == "6"){
+                sleep(1);
                 cout<<"\033[32mHope you like our service\033[0m \e[1m!\e[0m \033[32mCome back again\033[0m"<<endl<<endl;
                 break;
             }
             else{
-                cout<<"\033[31mInvalid option !\033[0m"<<endl;
+                cout<<"\n\033[31mInvalid option !\033[0m"<<endl<<endl;
                 continue;
             } 
         }
@@ -87,7 +106,7 @@ class Bank{
     
 };
 
-void Bank::deleteUserByName(const string& username , string userpin) {
+void Bank::deleteUserByName(const string& username) {
     
         ifstream inputFile("user_details.txt");
         ofstream tempFile("temp_file.txt");
@@ -98,7 +117,7 @@ void Bank::deleteUserByName(const string& username , string userpin) {
             bool found = false;
 
             while (inputFile >> storedName >> storedPassword >> storedPhoneNo >> storedAge >> storedEmail >> storedProf >> storedMoney) {
-                if (username == storedName && userpin == storedPassword) {
+                if (username == storedName) {
                     found = true;
                 } else {
                     tempFile << storedName << ' ' << storedPassword << ' '<< storedPhoneNo << " " << storedAge << ' ' << storedEmail << ' '<< storedProf << " " << storedMoney <<endl;
@@ -111,14 +130,14 @@ void Bank::deleteUserByName(const string& username , string userpin) {
             if (found) {
                 remove("user_details.txt");
                 rename("temp_file.txt", "user_details.txt");
-                cout<<endl<<endl;
+                cout<<endl;
                 cout<<"\033[33mDeletion of account is in progress.......\033[0m";
                 sleep(2);
-                cout << "\n\nAccount of \e[1m" << name << "\e[0m has been deleted succesfully." << endl;
+                cout << "\n\nAccount by the name \e[1m" << storedName << "\e[0m has been deleted succesfully." << endl;
                 sleep(0.9);
             } else {
                 remove("temp_file.txt");
-                cout << "Account of \e[1m" << name << "\e[0m is not found." << endl;
+                cout << "Account by the name \e[1m" << storedName << "\e[0m is not found." << endl;
             }
         } else {
             cout << "Error: Could not open the file for reading or writing." << endl;
@@ -156,13 +175,8 @@ void Bank::balance(){
 
 
 void Bank::close_acc(){
-    cout<<"\e[1mEnter the following information for confirmation-\e[0m "<<endl<<endl;
-    cout<<"\e[1m>\e[0m Enter name: ";
-    cin>>closeAccName;
-    cout<<"\e[1m>\e[0m Enter pin: ";
-    cin>>closeAccPin;
-    
-    deleteUserByName(closeAccName , closeAccPin);
+
+    deleteUserByName(u_name);
 }
 
 
