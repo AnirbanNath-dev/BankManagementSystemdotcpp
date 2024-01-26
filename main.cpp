@@ -3,17 +3,18 @@
 #include<string>
 #include<cmath>
 #include<ctime>
+
 using namespace std;
 
 string name , prof, email, isEmploy, pin , nowCreate;
-int age, ph_no;
+int age;
+double ph_no;
 float balance = 100;
-float number_of_digits;
 
 class Bank{
 
     private:
-    string u_name ;
+    string u_name;
     string choice;
     float dep_money, with_money;
 
@@ -172,7 +173,7 @@ void Bank::withdraw(){
         ::balance -= with_money;
         appendBalanceForUser(u_name , -with_money);
         cout<<"Money withdrawn: Rs.\e[1m"<<with_money<<"\e[0m"<<endl;
-       
+
     }
     else{
         cout<<"Insufficient Money"<<endl;
